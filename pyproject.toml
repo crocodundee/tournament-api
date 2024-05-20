@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "tournament-api"
+version = "0.1.0"
+description = "RESTful API for sport competitions: badminton, tennis, ping-pong, volleyball etc.\""
+authors = ["Anastasiia Didan <anastasia.didan.dev@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.111.0"
+fastapi-sqlalchemy = "^0.2.1"
+alembic = "^1.13.1"
+uvicorn = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
