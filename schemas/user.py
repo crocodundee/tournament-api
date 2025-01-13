@@ -17,3 +17,13 @@ class UserCreateSchema(BaseModel):
 class UserSchema(BaseModel):
     email: EmailStr
     is_active: bool
+
+
+class UserSignInSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+    user: UserSchema
