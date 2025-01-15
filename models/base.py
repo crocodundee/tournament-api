@@ -24,10 +24,16 @@ class BaseModel(Base):
         return obj
 
     @classmethod
-    def filter(cls, session: Session, *args):
+    def get(cls, session: Session, *args):
         query = sa.select(cls).where(*args).limit(1)
         res = session.execute(query)
         return res.scalars().first()
+
+    @classmethod
+    def filter(cls, session: Session, *args):
+        query = sa.select(cls).where(*args)
+        res = session.execute(query)
+        return res.unique().scalars().all()
 
     @classmethod
     def exists(cls, session: Session, *args) -> bool:
