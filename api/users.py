@@ -1,14 +1,12 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from db.session import get_session
 from models.user import UserModel
-from schemas.user import (
-    TokenSchema,
-    UserCreateSchema,
-    UserSchema,
-    UserSignInSchema,
-)
+from schemas.user import TokenSchema, UserCreateSchema, UserSchema, UserSignInSchema
+from utils.auth import get_active_user
 
 router = APIRouter()
 
@@ -16,7 +14,7 @@ router = APIRouter()
 @router.post("/sign-up", response_model=UserSchema)
 def sign_up(user: UserCreateSchema, session: Session = Depends(get_session)):
     data = dict(user)
-    user = UserModel.filter(session, UserModel.email == data["email"])
+    user = UserModel.get(session, UserModel.email == data["email"])
     if user:
         raise HTTPException(
             detail="User with this email already exist.",
@@ -32,7 +30,7 @@ def sign_up(user: UserCreateSchema, session: Session = Depends(get_session)):
 @router.post("/sign-in", response_model=TokenSchema)
 def sign_in(user: UserSignInSchema, session: Session = Depends(get_session)):
     data = dict(user)
-    user = UserModel.filter(session, UserModel.email == data["email"])
+    user = UserModel.get(session, UserModel.email == data["email"])
     if user:
         if user.check_password(data["password"]):
             return TokenSchema(
@@ -47,3 +45,8 @@ def sign_in(user: UserSignInSchema, session: Session = Depends(get_session)):
         detail="User does not exist.",
         status_code=status.HTTP_400_BAD_REQUEST,
     )
+
+
+@router.get("/me", response_model=UserSchema)
+def me(user: Optional[UserModel] = Depends(get_active_user)):
+    return user
