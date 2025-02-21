@@ -11,7 +11,7 @@ from utils.auth import get_active_user
 router = APIRouter()
 
 
-@router.post("/sign-up", response_model=UserSchema)
+@router.post("/sign-up", response_model=UserSchema, status_code=201)
 def sign_up(user: UserCreateSchema, session: Session = Depends(get_session)):
     data = dict(user)
     user = UserModel.get(session, UserModel.email == data["email"])
