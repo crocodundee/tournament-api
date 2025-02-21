@@ -9,6 +9,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      ENVIRONMENT: test
+      DEBUG: 'true'
+      DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/testdatabase'
+      JWT_SECRET: '915fa416565e1b1dfd87d8565dd0aa15ffdeaba5d0d00e4d86e40cb5a056e58772ce572f80513b54831cb0db5af82f94258ac51bb84324dab8189a94f4fc716796463afd02466c4ed7f8ef930b6fb7ee1c4caa0062dc026fd064638e1a2048699821de4266922e2f14619e9022e37b162bd0171d9f9acced9ddbb52e8d48c7cb7e0219b53532e32ed730614265802cf730da371b79178d82ea02db032dd942a72f8d1d2056dd2bff2ebb547fe33807606e0219a06774557828f04b398d613cacfb1cf38bd3fd5ae3dbec58b8930746793bf78463cee45e1bc44b43c76bb00452e4d8e1c2369bd43283ec575e4454b6b4c9c5538516c2be13eebb40ce8a682f9a'
+      JWT_ALGORITHM: 'HS256'
+
     services:
       postgres:
         image: postgres:latest
@@ -34,6 +41,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.dev.txt
+      
+      - name: Run migrations
+        run: |
+          alembic migrations head
 
       - name: Run Tests
         run: |
