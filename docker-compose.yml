@@ -6,7 +6,7 @@ services:
     container_name: postgresql
     image: postgres
     ports:
-      - 5432:5432
+      - ${DB_PORT}:5432
     env_file:
       - ./.env
     environment:
@@ -34,9 +34,13 @@ services:
       dockerfile: ./docker/Dockerfile
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
-      - .:/app
+      - ./:/app
     env_file:
       - ./.env
+    environment:
+      - DEBUG=${DEBUG}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - 8000:8000
     depends_on:
